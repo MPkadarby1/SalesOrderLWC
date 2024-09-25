@@ -1,0 +1,240 @@
+<template>
+    <lightning-card>
+
+        <template if:true={isLoading}>
+            <div class="demo-only demo--inverse" style="height:6rem;background-color:#16325c;position:relative">
+                <div class="slds-spinner_container">
+                  <div role="status" class="slds-spinner slds-spinner_medium">
+                    <span class="slds-assistive-text">Loading</span>
+                    <div class="slds-spinner__dot-a"></div>
+                    <div class="slds-spinner__dot-b"></div>
+                  </div>
+                </div>
+              </div>
+        </template>
+
+        <template if:false={isLoading}>
+        
+            <!--testing-->
+                <template if:true={showHome}>
+
+                
+            <!--testing-->
+
+        <div class="slds-grid slds-wrap">
+            <div class="slds-col slds-size_6-of-12" style="padding-left:8px; padding-right:8px; ">
+                <div class="slds-col slds-size_12-of-12">
+                    <lightning-input value={accName} label="Customer Name" field-name="accountName" disabled={isReadOnly} required="true"> </lightning-input>
+                </div>
+                <div class="slds-col  slds-size_12-of-12">
+                    <lightning-input  value ={quoteObj.BillingStreet} label="Billing Address" field-level-help="value to be added" field-name="BillingStreet" disabled={isReadOnly}></lightning-input>    
+                </div>
+
+                <div class="slds-col  slds-size_12-of-12">
+                <div class="slds-grid slds-wrap slds-gutters">
+                    <div class="slds-col  slds-size_6-of-12">
+                        <lightning-input value ={quoteObj.BillingCity} label="Billing City" disabled={isReadOnly}></lightning-input>    
+                    </div>
+                    <div class="slds-col  slds-size_6-of-12">
+                        <lightning-input value ={quoteObj.BillingState}  label="Billing State" disabled={isReadOnly}></lightning-input>    
+                    </div>
+                </div>
+                </div>
+
+                <div class="slds-col  slds-size_12-of-12">
+                    <div class="slds-grid slds-wrap slds-gutters">
+                        <div class="slds-col  slds-size_6-of-12">
+                            <lightning-input value ={quoteObj.BillingPostalCode} data-name="Postal Code"  label="Postal Code" disabled={isReadOnly}></lightning-input>    
+                        </div>
+                        <div class="slds-col  slds-size_6-of-12">
+                            <lightning-input value ={quoteObj.BillingCountry}  label="Country" disabled={isReadOnly}></lightning-input>    
+                        </div>
+                    </div>
+                    </div>
+
+                    <div class="slds-col  slds-size_12-of-12">
+
+                  <!---->      
+                  <div class="slds-combobox_container">
+                    <div class={boxClass} aria-expanded="true" aria-haspopup="listbox" role="combobox">
+                        <div class="slds-combobox__form-element" role="none">
+                          
+                                <lightning-input type="search"     
+                                class={inputClass}           
+                                value={searchPack.searchTerm}
+                                onclick={handleAccountSearchClick}
+                                onchange={handleAccountSearchChange}
+                                autocomplete="false" label="End Customer" data-name="EndCustomerU"> </lightning-input>
+                            </div>
+                        <div class="slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid" role="listbox">
+                            <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                                <template for:each={accounts} for:item="rec">
+                                    <li key={rec} data-id={rec.Id} data-name={rec.Name} onclick={onSelect} role="presentation">
+                                        <span class="slds-lookup__item-action" role="option">
+                                            <span class="slds-truncate">{rec.Name}</span>
+                                        </span>
+                                    </li>
+                                </template>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <!---->
+
+
+
+
+                        
+               
+                    </div>
+
+                    <!--testing-->
+                <div class="slds-col slds-size_12-of-12" style="margin:0; padding:0;">
+                    <lightning-record-edit-form object-api-name="Quote">
+                        <lightning-input-field 
+                            field-name="Related_Conveyor__c"
+                            label="Related Conveyor"   
+                            value={initialRelatedConveyer}
+                            onchange={handleRelatedConveyer}>      
+                        </lightning-input-field>
+                
+                    </lightning-record-edit-form>
+                    </div>
+                    <!-- variant= "label-hidden" -->
+                    <!--testing-->
+
+                    <div class="slds-col  slds-size_12-of-12" style="padding-top:12px;">
+                        <lightning-button
+                        variant="neutral"
+                        onclick={showCustomerNotes}
+                        name="Customer Notes"
+                        label="Add Customer Notes"></lightning-button>
+                    
+                    <template if:true={showCustomerNotesFlow}>
+                            <!-- <lightning-flow
+                            flow-api-name='Order_Creation_Customer_Notes'
+                            onstatuschange={handleStatusChange}
+                            flow-input-variables={inputVariables}
+                        >
+                        </lightning-flow>     -->
+                        <c-show-flow-customer-notes-modal-quote
+                         receive-account-data ={accountIdForFlow}
+                         handle-modal-open-close={showCustomerNotesFlow}
+                         onmodalclosed={handleFlowModalClose}>
+                        </c-show-flow-customer-notes-modal-quote>
+                    </template>
+
+                    <!-- <lightning-input value ={customerNotes} label="Customer Notes" data-name="CustomerNotesU"></lightning-input>
+                     -->
+                    <!--Testing-->
+                    <lightning-formatted-rich-text
+                    value={customerNotes} label="Customer Notes" data-name="CustomerNotesU"
+                ></lightning-formatted-rich-text>
+                    <!--Testing-->
+
+                    </div>
+            </div>
+            <div class="slds-col slds-size_6-of-12" style="padding-left:8px; padding-right:8px; ">
+                <div class="slds-col slds-size_12-of-12">
+                    <lightning-input  label="Shipping Address" data-name="ShippingAddress" value={quoteObj.ShippingStreet}> </lightning-input>
+                </div>
+                <div class="slds-col slds-size_12-of-12">
+                    <div class="slds-grid slds-wrap slds-gutters">
+                        <div class="slds-col  slds-size_6-of-12">
+                            <lightning-input label="City" data-name="CityU" value={quoteObj.ShippingCity}></lightning-input>    
+                        </div>
+                        <div class="slds-col  slds-size_6-of-12">
+                            <lightning-input label="State" data-name="StateU" value={quoteObj.ShippingState}></lightning-input>    
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_12-of-12">
+                    <div class="slds-grid slds-wrap slds-gutters">
+                        <div class="slds-col  slds-size_6-of-12">
+                            <lightning-input type="text" label="Postal Code"  data-name="PostalCodeU" min="1000" max="999999" message-when-range-overflow="Please enter a correct pincode" message-when-range-underflow="Please enter a correct pincode" value={quoteObj.ShippingPostalCode}></lightning-input>    
+                        </div>
+                        <div class="slds-col  slds-size_6-of-12">
+                            <lightning-input type="text" label="Country"  data-name="CountryU" value={quoteObj.ShippingCountry}></lightning-input>    
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_12-of-12">
+                    <div class="slds-grid slds-wrap slds-gutters">
+                        <div class="slds-col  slds-size_6-of-12">
+                            <lightning-input  type="date" label="Order Date"  data-name="OrderDateU" required="true" value={currentDate}></lightning-input>    
+                        </div>
+                        <div class="slds-col  slds-size_6-of-12">
+                            <lightning-input  type="text" label="Customer PO Number"  data-name="CustomerPONumberU"></lightning-input>    
+                        </div>
+                    </div>
+                </div>
+
+                <div class="slds-col slds-size_12-of-12">
+                        <lightning-input placeholder="Please push this order through quickly"  type="text" label="Internal Comments" data-name="InternalCommentsU"></lightning-input>    
+                </div>
+
+                     <!--testing 12345-->
+                     <div class="slds-col  slds-size_12-of-12">
+                        <lightning-input  type="date" label="Requested Ship Date"  data-name="RequestDate"  ></lightning-input>    
+                    </div>
+                    <!--testing 12345-->
+                
+                <div class="slds-col slds-size_12-of-12">
+                    <div class="slds-grid slds-wrap slds-grid--vertical-align-end paddingTop">
+                        <p>Trial Order?</p> 
+                        <template if:true={trialFlag}>
+                            <lightning-button-icon style="padding-left:4px; padding-right:4px;" class="add-icn" icon-name="utility:add" alternative-text="Connected" size="x-small" title="trialremoved" data-name="trialremoved" data-title="add" onclick={handleTrial}  variant="brand">
+                            </lightning-button-icon> 
+                        </template>
+                        <template if:false={trialFlag}>
+                            <lightning-button-icon style="padding-left:4px; padding-right:4px;" class="add-icn" icon-name="utility:add" alternative-text="Connected" size="x-small" title="trialadded" data-name="trialadded" data-title="add" onclick={handleTrial}  variant="border">
+                            </lightning-button-icon> 
+                        </template>
+                                 
+                     </div>
+                </div>
+            </div>
+      
+        </div>
+
+        <template if:true={showDatatable}>
+            <c-lightning-datatable-quote-line-item quotes-selected={quoteLineItem} 
+                                                   show-table={showDatatable} 
+                                                   send-list-to-parent ={fetchItemList}
+                                                   onquoteitemlistvaluechange={quoteItemListFromChildHandler} 
+                                                   onalldeleted={allDeleted} 
+                                                   onrefreshlistinlineedit={handleInlineEdit}
+                                                   onshowhidebutton={toggleCreateOrderButton}>
+            </c-lightning-datatable-quote-line-item>
+        </template>
+        <!-- <template if:false={showDatatable}>
+            <c-show-hide-quote-items-not-available></c-show-hide-quote-items-not-available>
+        </template> -->
+        
+        <div class="slds-grid slds-wrap slds-grid--align-center">
+            <lightning-button
+            variant="brand"
+            onclick={handleSubmit}
+            name="Sales Order"
+            label="Create Sales Order"
+            disabled={btSalesOrder}
+            style="padding-top:8px; padding-bottom:8px;"
+        >
+        </lightning-button>
+        </div>
+
+
+</template>
+    <template if:false={showHome}>
+        <c-show-hide-quote-items-not-available></c-show-hide-quote-items-not-available>
+    </template>
+
+</template>
+        <!-- </lightning-record-edit-form> -->
+    </lightning-card>
+
+
+</template>

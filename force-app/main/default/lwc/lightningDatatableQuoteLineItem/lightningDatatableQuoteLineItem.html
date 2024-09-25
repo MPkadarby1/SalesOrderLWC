@@ -1,0 +1,48 @@
+<template>
+
+    <template if:true={showLightningTable}>
+        
+        <template if:true={isLoading}>
+            
+        <div class="demo-only demo-only" style="height:6rem;background-color:#16325c;position:relative">
+            <div class="slds-spinner_container">
+              <div role="status" class="slds-spinner slds-spinner_medium slds-spinner_inverse">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+              </div>
+            </div>
+          </div>
+        </template>
+
+        <template if:false={isLoading}>
+            
+        <div style="padding-top:8px;">
+            <!-- <div class="slds-scrollable_x slds-scrollable_y" style="height: 200px;" > -->
+                <div style="height: 200px;" >
+
+                <lightning-datatable
+                        key-field="Id"
+                        title = "Quote Line Items"
+                        data={quoteList}
+                        columns={quoteColumnsData}
+                        hide-checkbox-column="true"
+                        column-widths-mode="fixed" 
+                        onrowaction={addRelated}
+                        onsave={saveHandleAction}
+                        draft-values={fldsItemValues} 
+                    >
+                    </lightning-datatable>
+            </div>
+        </div>
+        
+    </template>
+
+    </template>
+
+    
+    <template if:false={showLightningTable}>
+        <p>No Quote Items left to add to the order</p>
+    </template>
+
+</template>

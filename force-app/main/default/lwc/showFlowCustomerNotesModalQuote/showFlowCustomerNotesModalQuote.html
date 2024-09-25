@@ -1,0 +1,30 @@
+<template>
+     <!--Use template if:true to display/hide popup based on isModalOpen value--> 
+     <template if:true={isModalOpen}>
+         <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open slds-modal_large model-bg-opacity" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" >
+            <div class="slds-modal__container">
+                <div class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
+                        <lightning-icon icon-name="utility:close"
+                            alternative-text="close"
+                            variant="inverse"
+                            size="small"
+                            onclick={handleModal} ></lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 id="modal-heading-02" class="slds-text-heading_medium slds-hyphenate">Add Customer Notes</h2>             
+                </div>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-2">
+                    <lightning-flow
+                    flow-api-name='Order_Creation_Customer_Notes'
+                    onstatuschange={handleStatusChange}
+                    flow-input-variables={inputVariables}
+                >
+                </lightning-flow>
+                </div>
+            </div>
+        </section>
+         <div class="slds-backdrop slds-backdrop_open"></div>  
+
+    </template>
+</template>
